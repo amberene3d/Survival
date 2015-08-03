@@ -9,9 +9,11 @@ public class scrBackground : MonoBehaviour {
 	Transform tr;
 	bool isMoving;
 
-	public List<Lot> lots = new List<Lot> ();
+	public GameObject lot;
 
-	public List<GameObject> slots = new List<GameObject> ();
+	public List<GameObject> lots = new List<GameObject> ();
+
+	int numLots = 8;
 	int slotWidth = 6;
 
 	public List<Vector3> positions = new List<Vector3> ();
@@ -19,30 +21,29 @@ public class scrBackground : MonoBehaviour {
 
 	Vector3 targetPos;
 
-	public GameObject emptyTrash, emptyEmpty;
-	public GameObject housingTent;
+	public Sprite emptyTrash, emptyEmpty;
+	public Sprite housingTent;
 	
 	void Start () {
 		tr = Camera.main.GetComponent<Transform> ();
-		for (int i = 0; i < lots.Count; i++) {
-			GameObject l = emptyEmpty;
-			switch(lots[i].type) {
-			case "empty":
-				if(lots[i].state == "trash") l = emptyTrash;
-				else l = emptyEmpty;
-				break;
-			case "housing":
-				l = housingTent;
-				break;
+		for (int i = 0; i < numLots; i++) {
+			GameObject l = Instantiate(lot, new Vector3(i * slotWidth, 0, 0), Quaternion.identity) as GameObject;
+			lots.Add (l);
+			l.SendMessage("SetType","empty");
+			if(Random.Range(0,100) < 75) {
+				l.SendMessage("SetState","trash");
+				l.SendMessage("SetFace",emptyTrash);
+			} else {
+				l.SendMessage("SetState","empty");
+				l.SendMessage("SetFace",emptyEmpty);
 			}
-			Instantiate (l, new Vector3(i * slotWidth, 0, 0), Quaternion.identity);
+			l.SendMessage("ShowFace");
 			positions.Add (new Vector3((i * slotWidth) + tr.position.x, tr.position.y, tr.position.z));
 		}
 
 		tr.position = positions [currentPos];
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if (isMoving) {
 			if(tr.position != targetPos) {
@@ -66,7 +67,6 @@ public class scrBackground : MonoBehaviour {
 		if (currentPos > 0) {
 			currentPos--;
 			targetPos = positions[currentPos];
-			//tr.position = positions[currentPos];
 			isMoving = true;
 		}
 	}
@@ -75,7 +75,6 @@ public class scrBackground : MonoBehaviour {
 		if (currentPos < positions.Count - 2) {
 			currentPos++;
 			targetPos = positions[currentPos];
-			//tr.position = positions[currentPos];
 			isMoving = true;
 		}
 	}

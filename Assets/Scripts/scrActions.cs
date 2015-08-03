@@ -7,6 +7,8 @@ public class scrActions : MonoBehaviour {
 	public GameObject confirmationPanel;
 
 	string queuedAction = "wait";
+	int queuedTime = 0;
+	public GameObject selectedLot;
 
 	// Use this for initialization
 	void Start () {
@@ -31,10 +33,17 @@ public class scrActions : MonoBehaviour {
 		ShowConfirmation ();
 	}
 
+	void SetClearing(int time) {
+		queuedAction = "clearing";
+		queuedTime = time;
+		ShowConfirmation ();
+	}
+
 	public void PerformAction() {
 		switch (queuedAction) {
-		case "clear":
+		case "clearing":
 			Debug.Log ("Clearing Trash");
+
 			break;
 		default:
 			Debug.Log ("No action selected.");
