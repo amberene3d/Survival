@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using CustomClasses;
 
 public class scrLot : MonoBehaviour {
 
@@ -12,7 +13,7 @@ public class scrLot : MonoBehaviour {
 	public string state;
 	public Sprite face;
 
-	Dictionary<string, int> flags = new Dictionary<string, int>();
+	public List<Flag> flags = new List<Flag>();
 
 	void Start () {
 		manager = GameObject.Find ("Manager");
@@ -60,28 +61,31 @@ public class scrLot : MonoBehaviour {
 	// FLAGS
 	// clearing: Removing rubble and preparing to build. Lots must be cleared before building.
 	void AddFlag(string flag, int duration) {
-		flags.Add (flag, duration);
+		Flag f = new Flag ();
+		f.name = flag;
+		f.duration = duration;
+		flags.Add (f);
 	}
 
 	// TODO: Add events that happen when specific flags run out
 	void ClearFlag(string flag) {
-		flags.Remove (flag);
-		switch (flag) {
-		case "clearing":
-			type = "empty";
-			state = "empty";
-			face = manager.GetComponent<scrBackground>().emptyEmpty;
-			ShowFace ();
-			break;
-		}
+//		flags.Remove (flag);
+//		switch (flag) {
+//		case "clearing":
+//			type = "empty";
+//			state = "empty";
+//			face = manager.GetComponent<scrBackground>().emptyEmpty;
+//			ShowFace ();
+//			break;
+//		}
 	}
 
 	void NewDay() {
-		foreach (KeyValuePair<string, int> f in flags) {
-			f.Value--;
-			if(f.Value <= 0) {
-				ClearFlag (f.Key);
-			}
-		}
+//		foreach (KeyValuePair<string, int> f in flags) {
+//			f.Value = f.Value - 1;
+//			if(f.Value <= 0) {
+//				ClearFlag (f.Key);
+//			}
+//		}
 	}
 }
